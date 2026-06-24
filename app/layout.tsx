@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'مُولّد العروض التقديمية الاحترافي | iLab',
+  title: 'مُولّد العروض التقديمية الاحترافي',
   description: 'منصة ذكية متطورة لتوليد وتصميم عروض الباوربوينت باللغة العربية الفصحى مدعومة بالذكاء الاصطناعي',
 };
 

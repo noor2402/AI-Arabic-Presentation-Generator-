@@ -99,7 +99,7 @@ function addTOCSlide(pptx: pptxgen, T: ThemeConfig, WHITE: string, DARK: string,
     s.addShape(pptx.ShapeType.roundRect, { x: 6.9, y, w: 6.2, h: 0.75, fill: { color: i % 2 === 0 ? T.light : WHITE }, line: { color: T.accent, pt: 1 }, rectRadius: 0.08 });
     s.addShape(pptx.ShapeType.ellipse, { x: 12.65, y: y + 0.17, w: 0.38, h: 0.38, fill: { color: T.secondary }, line: { color: T.secondary } });
     s.addText(String(i + 1).padStart(2, '0'), { x: 12.65, y: y + 0.17, w: 0.38, h: 0.38, fontSize: 10, bold: true, color: WHITE, fontFace: 'Segoe UI', align: 'center', valign: 'middle' });
-    s.addText(`${slide.icon || '📄'} ${slide.title}`, { x: 7.0, y, w: 5.5, h: 0.75, fontSize: 13, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'middle' });
+    s.addText(slide.title, { x: 7.0, y, w: 5.5, h: 0.75, fontSize: 13, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'middle' });
   });
 
   slides.slice(half).forEach((slide: Slide, i: number) => {
@@ -107,7 +107,7 @@ function addTOCSlide(pptx: pptxgen, T: ThemeConfig, WHITE: string, DARK: string,
     s.addShape(pptx.ShapeType.roundRect, { x: 0.4, y, w: 6.2, h: 0.75, fill: { color: i % 2 === 0 ? T.light : WHITE }, line: { color: T.accent, pt: 1 }, rectRadius: 0.08 });
     s.addShape(pptx.ShapeType.ellipse, { x: 6.15, y: y + 0.17, w: 0.38, h: 0.38, fill: { color: T.secondary }, line: { color: T.secondary } });
     s.addText(String(i + half + 1).padStart(2, '0'), { x: 6.15, y: y + 0.17, w: 0.38, h: 0.38, fontSize: 10, bold: true, color: WHITE, fontFace: 'Segoe UI', align: 'center', valign: 'middle' });
-    s.addText(`${slide.icon || '📄'} ${slide.title}`, { x: 0.5, y, w: 5.5, h: 0.75, fontSize: 13, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'middle' });
+    s.addText(slide.title, { x: 0.5, y, w: 5.5, h: 0.75, fontSize: 13, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'middle' });
   });
 }
 
@@ -139,13 +139,11 @@ function addContentSlide(
     const imageData = imageMap.get(slide.id);
 
     if (imageData) {
-      // Image on left, text on right
       s.addImage({ data: imageData, x: 0.4, y: 1.55, w: 4.8, h: 4.6, rounding: true });
       s.addShape(pptx.ShapeType.roundRect, { x: 5.5, y: 1.55, w: 7.3, h: 4.6, fill: { color: WHITE }, line: { color: T.accent, pt: 1 }, rectRadius: 0.1 });
       s.addShape(pptx.ShapeType.rect, { x: 12.68, y: 1.55, w: 0.12, h: 4.6, fill: { color: T.secondary }, line: { color: T.secondary } });
       s.addText(slide.mainText || '', { x: 5.65, y: 1.7, w: 6.9, h: 4.3, fontSize: 15, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'top', wrap: true, lineSpacingMultiple: 1.5 });
     } else {
-      // Fallback: full width
       s.addShape(pptx.ShapeType.roundRect, { x: 0.5, y: 1.8, w: 12.4, h: 4.2, fill: { color: WHITE }, line: { color: T.accent, pt: 1 }, rectRadius: 0.1 });
       s.addShape(pptx.ShapeType.rect, { x: 12.8, y: 1.8, w: 0.12, h: 4.2, fill: { color: T.secondary }, line: { color: T.secondary } });
       s.addText(slide.mainText || '', { x: 0.8, y: 2.0, w: 11.8, h: 3.8, fontSize: 16, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'top', wrap: true, lineSpacingMultiple: 1.5 });
@@ -161,23 +159,20 @@ function addContentSlide(
       s.addText(point, { x: 0.8, y, w: 11.6, h: 0.9, fontSize: 14, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'middle', wrap: true });
     });
 
-
   // ── COMPARISON ──
-} else if (slide.type === 'comparison') {
-  // الجانب الأول (يستخدم primary)
-  s.addShape(pptx.ShapeType.roundRect, { x: 6.8, y: 1.8, w: 5.8, h: 4.5, fill: { color: T.light }, line: { color: T.primary, pt: 1 }, rectRadius: 0.1 });
-  s.addShape(pptx.ShapeType.rect, { x: 6.8, y: 1.8, w: 5.8, h: 0.6, fill: { color: T.primary }, line: { color: T.primary } });
-  s.addText(slide.leftSide?.label || 'الجانب الأول', { x: 6.8, y: 1.8, w: 5.8, h: 0.6, fontSize: 15, bold: true, color: WHITE, fontFace: 'Segoe UI', align: 'center', rtlMode: true, valign: 'middle' });
-  const leftPoints = (slide.leftSide?.points || []).join('\n\n• ');
-  s.addText(leftPoints ? '• ' + leftPoints : '', { x: 7.0, y: 2.6, w: 5.4, h: 3.5, fontSize: 13, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'top', wrap: true });
+  } else if (slide.type === 'comparison') {
+    s.addShape(pptx.ShapeType.roundRect, { x: 6.8, y: 1.8, w: 5.8, h: 4.5, fill: { color: T.light }, line: { color: T.primary, pt: 1 }, rectRadius: 0.1 });
+    s.addShape(pptx.ShapeType.rect, { x: 6.8, y: 1.8, w: 5.8, h: 0.6, fill: { color: T.primary }, line: { color: T.primary } });
+    s.addText(slide.leftSide?.label || 'الجانب الأول', { x: 6.8, y: 1.8, w: 5.8, h: 0.6, fontSize: 15, bold: true, color: WHITE, fontFace: 'Segoe UI', align: 'center', rtlMode: true, valign: 'middle' });
+    const leftPoints = (slide.leftSide?.points || []).join('\n\n• ');
+    s.addText(leftPoints ? '• ' + leftPoints : '', { x: 7.0, y: 2.6, w: 5.4, h: 3.5, fontSize: 13, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'top', wrap: true });
 
-  // الجانب الثاني (يستخدم secondary)
-  s.addShape(pptx.ShapeType.roundRect, { x: 0.8, y: 1.8, w: 5.8, h: 4.5, fill: { color: T.light }, line: { color: T.secondary, pt: 1 }, rectRadius: 0.1 });
-  s.addShape(pptx.ShapeType.rect, { x: 0.8, y: 1.8, w: 5.8, h: 0.6, fill: { color: T.secondary }, line: { color: T.secondary } });
-  s.addText(slide.rightSide?.label || 'الجانب الثاني', { x: 0.8, y: 1.8, w: 5.8, h: 0.6, fontSize: 15, bold: true, color: WHITE, fontFace: 'Segoe UI', align: 'center', rtlMode: true, valign: 'middle' });
-  const rightPoints = (slide.rightSide?.points || []).join('\n\n• ');
-  s.addText(rightPoints ? '• ' + rightPoints : '', { x: 1.0, y: 2.6, w: 5.4, h: 3.5, fontSize: 13, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'top', wrap: true });
-}
+    s.addShape(pptx.ShapeType.roundRect, { x: 0.8, y: 1.8, w: 5.8, h: 4.5, fill: { color: T.light }, line: { color: T.secondary, pt: 1 }, rectRadius: 0.1 });
+    s.addShape(pptx.ShapeType.rect, { x: 0.8, y: 1.8, w: 5.8, h: 0.6, fill: { color: T.secondary }, line: { color: T.secondary } });
+    s.addText(slide.rightSide?.label || 'الجانب الثاني', { x: 0.8, y: 1.8, w: 5.8, h: 0.6, fontSize: 15, bold: true, color: WHITE, fontFace: 'Segoe UI', align: 'center', rtlMode: true, valign: 'middle' });
+    const rightPoints = (slide.rightSide?.points || []).join('\n\n• ');
+    s.addText(rightPoints ? '• ' + rightPoints : '', { x: 1.0, y: 2.6, w: 5.4, h: 3.5, fontSize: 13, color: DARK, fontFace: 'Segoe UI', align: 'right', rtlMode: true, valign: 'top', wrap: true });
+  }
 
   // Fixed footer
   s.addShape(pptx.ShapeType.rect, { x: 0, y: 6.8, w: '100%', h: 0.2, fill: { color: T.secondary }, line: { color: T.secondary } });
@@ -199,4 +194,3 @@ function addThankYouSlide(pptx: pptxgen, T: ThemeConfig, WHITE: string, topic: s
   s.addShape(pptx.ShapeType.rect, { x: 4.2, y: 4.45, w: 4.8, h: 0.05, fill: { color: T.accent, transparency: 30 }, line: { color: T.accent, transparency: 30 } });
   s.addText('تم إنشاؤه بالذكاء الاصطناعي', { x: 0.5, y: 5.9, w: 12.5, h: 0.45, fontSize: 11, color: WHITE, fontFace: 'Segoe UI', align: 'center', rtlMode: true });
 }
-

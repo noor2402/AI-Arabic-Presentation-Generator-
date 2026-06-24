@@ -61,7 +61,6 @@ export default function SlidePreview({ slide, theme }: Props) {
         background: `linear-gradient(135deg, #${theme.primary}, #${theme.secondary})`,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
       }}>
-        <span style={{ fontSize: '22px' }}>{slide.icon || "📄"}</span>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
           <span style={{ color: 'white', fontWeight: '700', fontSize: '18px', fontFamily: 'Cairo' }}>
             {slide.title}
